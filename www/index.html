@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CAS_1 - Nu Collectif</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-slider.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div style="height:16px"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Vidéo gauche : <span id="left_title">Title</span>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <img style="width:100%" src="http://www.placehold.it/1280x720/EFEFEF/AAAAAA" />
+                        </div>
+                        <br/>
+                        <div class="progress">
+                            <div class="progress-bar" id="left_progress" style="width: 0%;"></div>
+                        </div>
+
+                        <p>Position : <span id="left_time">0</span> / <span id="left_length">0</span> s
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Vidéo droite : <span id="right_title">Title</span>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <img style="width:100%" src="http://www.placehold.it/1280x720/EFEFEF/AAAAAA" />
+                        </div>
+                        <br/>
+                        <div class="progress">
+                            <div class="progress-bar" id="right_progress" style="width: 0%;"></div>
+                        </div>
+                        <p>Position : <span id="right_time">0</span> / <span id="right_length">0</span> s
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Acte </div>
+                    <div class="panel-body">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" style="width: 35%"></div>
+                            <div class="progress-bar progress-bar-warning" style="width: 20%"></div>
+                            <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
+                        </div>
+                        <a href="#" class="btn btn-primary">
+                            Vidéo <span class="glyphicon glyphicon-backward" />
+                        </a>
+                        <a href="#" class="btn btn-info">
+                            Vidéo <span class="glyphicon glyphicon-pause" />
+                        </a>
+                        <a href="#" class="btn btn-primary">
+                            Vidéo <span class="glyphicon glyphicon-forward" />
+                        </a>
+                        <span class="pull-right">
+                        <a href="#" class="btn btn-warning">
+                            Acte <span class="glyphicon glyphicon-fast-backward" />
+                        </a>
+                        <a href="#" class="btn btn-warning">
+                            Acte <span class="glyphicon glyphicon-fast-forward" />
+                        </a>
+                        <br/>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Conduite </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <a href="#" class="btn btn-lg btn-danger">
+                            Départ <span class="glyphicon glyphicon-play" />
+                        </a>
+                        </div>
+                        <h3>Options</h3>
+                        <p>
+                            <input type="checkbox"> Fondu au noir avant chaque transition
+                        </p>
+                        <p>
+                            <input type="checkbox"> Sélection aléatoire de la piste
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ws.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

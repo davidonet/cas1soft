@@ -42,6 +42,7 @@ from threading import Thread
 import sys
 import vlc
 import json
+import math
 
 from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
 
@@ -96,14 +97,16 @@ class SimpleEcho(WebSocket):
     def send_pos(self, data):
         msg = {
             "left_screen": {
-                "time": self.v1.player.get_time(),
-                "length": self.v1.player.get_length(),
-                "title": self.v1.player.get_media().get_mrl()
+                "time": self.v1.player.get_time()//1000,
+                "length": self.v1.player.get_length()//1000,
+                "pos": math.floor(self.v1.player.get_position()*10000)/100,
+                "mrl": self.v1.player.get_media().get_mrl()
             },
             "right_screen": {
-                "time": self.v2.player.get_time(),
-                "length": self.v2.player.get_length(),
-                "title": self.v2.player.get_media().get_mrl()
+                "time": self.v2.player.get_time()//1000,
+                "length": self.v2.player.get_length()//1000,
+                "pos": math.floor(self.v2.player.get_position()*10000)/100,
+                "mrl": self.v2.player.get_media().get_mrl()
             }
         }
         self.sendMessage(json.dumps(msg))
