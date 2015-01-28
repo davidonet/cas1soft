@@ -6,11 +6,9 @@ function zeroFill(number, width) {
     return number + ""; // always return a string
 }
 
-function doConnect() {
+function doConnect(onOpen) {
     websocket = new WebSocket("ws://localhost:8888/");
-    websocket.onopen = function(evt) {
-        onOpen(evt)
-    };
+    websocket.onopen = onOpen;
     websocket.onclose = function(evt) {
         onClose(evt)
     };
@@ -22,9 +20,6 @@ function doConnect() {
     };
 }
 
-function onOpen(evt) {
-    writeToScreen("connected\n");
-}
 
 function onClose(evt) {
     writeToScreen("disconnected\n");
@@ -54,8 +49,9 @@ function onError(evt) {
 }
 
 function doSend(message) {
-    writeToScreen("sent: " + message + '\n');
-    websocket.send(message);
+    msg = JSON.stringify(message);
+    writeToScreen("sent: " + msg + '\n');
+    websocket.send(msg);
 }
 
 function doDisconnect() {

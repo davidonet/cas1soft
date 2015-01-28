@@ -21,10 +21,7 @@
                     <div class="panel-heading"> Vidéo gauche : <span id="left_title">Title</span>
                     </div>
                     <div class="panel-body">
-                        <div>
-                            <img style="width:100%" src="http://www.placehold.it/1280x720/EFEFEF/AAAAAA" />
-                        </div>
-                        <br/>
+
                         <div class="progress">
                             <div class="progress-bar" id="left_progress" style="width: 0%;"></div>
                         </div>
@@ -39,10 +36,7 @@
                     <div class="panel-heading"> Vidéo droite : <span id="right_title">Title</span>
                     </div>
                     <div class="panel-body">
-                        <div>
-                            <img style="width:100%" src="http://www.placehold.it/1280x720/EFEFEF/AAAAAA" />
-                        </div>
-                        <br/>
+
                         <div class="progress">
                             <div class="progress-bar" id="right_progress" style="width: 0%;"></div>
                         </div>
@@ -91,7 +85,10 @@
                     <div class="panel-heading"> Conduite </div>
                     <div class="panel-body">
                         <div class="text-center">
-                            <a href="#" class="btn btn-lg btn-danger">
+                            <a href="#" class="btn btn-lg btn-success" onclick="$.cas1.init()">
+                            Init <span class="glyphicon glyphicon-asterisk" />
+                         </a>
+                            <a href="#" class="btn btn-lg btn-danger" onclick="$.cas1.start()">
                             Départ <span class="glyphicon glyphicon-play" />
                         </a>
                         </div>
