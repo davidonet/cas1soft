@@ -2,42 +2,59 @@
 
 
 from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
+
 from threading import Thread
 
 import json
 import gtk
 import vlc
 import math
+from folderscan import VideoCollection
+
 
 gtk.gdk.threads_init()
 instance = vlc.Instance("--no-xlib")
+Thread(target=gtk.main).start()
+
 
 class VideoClass(WebSocket):
 
     def appInit(self):
-        window = gtk.Window()
+        self.window = gtk.Window()
         mainbox = gtk.VBox()
         videos = gtk.HBox()
-
-        window.add(mainbox)
+        self.window.add(mainbox)
         mainbox.add(videos)
         self.vleft = VLCContainer()
         videos.add(self.vleft)
         self.vright = VLCContainer()
         videos.add(self.vright)
+        self.window.show_all()
+        if 'videoCollection' not in globals():
+            Thread(target=VideoCollection, args=(
+                "/home/dolivari/Public/sequences/", self.scanDone)).start()
+        else:
+            self.sendMessage(json.dumps(videoCollection))
 
-        window.show_all()
-        window.connect("destroy", gtk.main_quit)
-        Thread(target=gtk.main).start()
+    def scanDone(self, collection):
+        global videoCollection
+        videoCollection = {
+            "collection": collection
+        }
+        self.sendMessage(json.dumps(videoCollection))
 
-    def play(self, prefix):
+    def play(self, msg):
 
-        print("play",prefix)
+        left_vid = videoCollection["collection"][msg["actidx"]]["tracks"][
+            msg["trackidx"]]["videos_left"][msg["sequenceidx"]]["filename"]
+
+        right_vid = videoCollection["collection"][msg["actidx"]]["tracks"][
+            msg["trackidx"]]["videos_right"][msg["sequenceidx"]]["filename"]
 
         self.vleft.player.set_media(
-            instance.media_new(prefix + 'G_.mp4'))
+            instance.media_new(left_vid))
         self.vright.player.set_media(
-            instance.media_new(prefix + 'D_.mp4'))
+            instance.media_new(right_vid))
 
         if(self.vleft.player.get_length() < self.vright.player.get_length()):
             self.vlc_events = self.vright.player.event_manager()
@@ -50,8 +67,7 @@ class VideoClass(WebSocket):
         self.vleft.player.play()
         self.vright.player.play()
 
-
-    def positionChanged(self,pos):
+    def positionChanged(self, pos):
         msg = {
             "left_screen": {
                 "time": self.vleft.player.get_time() // 1000,
@@ -73,7 +89,9 @@ class VideoClass(WebSocket):
 
     def handleClose(self):
         print self.address, 'closed'
-        gtk.main_quit()
+        self.vleft.player.stop()
+        self.vright.player.stop()
+        self.window.destroy()
 
     def handleMessage(self):
         if self.data is None:
@@ -89,8 +107,9 @@ class VideoClass(WebSocket):
                 if(msg["command"] == "init"):
                     self.appInit()
                 if(msg["command"] == "play"):
-                    prefix = msg["prefix"]
-                    self.play(prefix)
+                    self.play(msg)
+                if(msg["command"] == "collection"):
+                    print(self.collection)
             except Exception as e:
                 print("Exception", e)
 
@@ -119,4 +138,8 @@ class VLCContainer(gtk.VBox):
 
 if __name__ == '__main__':
     server = SimpleWebSocketServer("", 8888, VideoClass)
-    server.serveforever()
+    try:
+        server.serveforever()
+    except KeyboardInterrupt:
+        gtk.main_quit()
+        server.close()
