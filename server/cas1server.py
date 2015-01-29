@@ -15,7 +15,7 @@ from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
 
 gtk.gdk.threads_init()
 instance = vlc.Instance("--no-xlib")
-Thread(target=gtk.main).start()
+
 
 
 class VideoClass(WebSocket):
@@ -30,8 +30,9 @@ class VideoClass(WebSocket):
         videos.add(self.vleft)
         self.vright = VLCContainer()
         videos.add(self.vright)
-
         self.window.show_all()
+        self.gtkthread = Thread(target=gtk.main).start()
+
         if 'videoCollection' not in globals():
             Thread(target=VideoCollection, args=(
                 "/home/dolivari/Public/sequences/", self.scanDone)).start()
@@ -138,9 +139,9 @@ class VideoClass(WebSocket):
         }
         self.sendMessage(json.dumps(msg))
 
-    def endReached(self,foo):
+    def endReached(self, foo):
         msg = self.currentSeq
-        msg["endreached"]=True;
+        msg["endreached"] = True
         self.sendMessage(json.dumps(msg))
 
     def handleConnected(self):
@@ -148,11 +149,28 @@ class VideoClass(WebSocket):
 
     def handleClose(self):
         print self.address, 'closed'
-        self.vleft.player.stop()
-        self.vright.player.stop()
-        self.window.destroy()
-        self.fadetimer.cancel()
 
+        try:
+            self.vleft.player.stop()
+        except:
+            pass
+        try:
+            self.vright.player.stop()
+        except:
+            pass
+        try:
+            self.window.destroy()
+        except:
+            pass
+        try:
+            self.fadetimer.cancel()
+        except:
+            pass
+        try:
+            gtk.main_quit()
+        except:
+            pass  
+        
     def handleMessage(self):
         if self.data is None:
             self.data = ""

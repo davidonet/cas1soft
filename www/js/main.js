@@ -1,14 +1,11 @@
 $(function() {
 
     $.cas1 = [];
-
-    $.cas1.init = function() {
-        doConnect(function() {
-            doSend({
-                command: "init"
-            });
+    doConnect(function() {
+        doSend({
+            command: "init"
         });
-    };
+    });
     $.cas1.start = function() {
         doSend({
             command: "play",
@@ -20,24 +17,30 @@ $(function() {
             command: "fadeout"
         });
     }
+
+    $("#playnext").prop('checked', true);
 });
 
 
 function collectionReceived(msg) {
-    var aCol = msg.collection;
+    theCollection = msg.collection;
+    var aCol = theCollection;
     for (var i = aCol.length - 1; i >= 0; i--) {
         var anAct = aCol[i];
-        var $actElt = $("<div><h1>Acte " + anAct.act + "</h1></div>");
-        $('#trace').prepend($actElt)
+        var $panel = $("<div class='row'></div>");
+        var $actElt = $("<div class='panel panel-default'><div class='panel-heading'><h2>Acte " + anAct.act + "</h2></div></div>");
+        $('#trace').prepend($panel)
+        $panel.append($actElt);
         for (var j = 0; j < anAct.tracks.length; j++) {
             var aTrack = anAct.tracks[j];
-            var $trkElt = $("<div><h2><a class='btn btn-info btn-sm '><span class='glyphicon glyphicon-play'/></a> Piste " + aTrack.track + "</h2></div>");
+            aplayact = "onclick=playVideo(" + (anAct.act - 1) + "," + j + "," + 0 + ")";
+            var $trkElt = $("<div class='panel-body'><h3><a class='btn btn-info btn-sm' " + aplayact + "><span class='glyphicon glyphicon-play'/></a> Piste " + aTrack.track + "</h3></div>");
             $actElt.append($trkElt);
             var ahtmlTab = "<table class='table table-bordered'><thead><tr><th>&nbsp;</th><th>Gauche</th><th>Droite</th></tr></thead><tbody>";
             ahtmlTab += "<tr><td>Durée totale</td><td>" + Math.floor(aTrack.duration_left / 1000) + "s</td><td>" + Math.floor(aTrack.duration_right / 1000) + "s</td></tr>";
             for (var k = 0; k < aTrack.videos_left.length; k++) {
-                aplay = "onclick=playVideo(" + (anAct.act - 1) + "," + j + "," + k + ")";
-                ahtmlTab += "<tr><td><a class='btn btn-success btn-xs' " + aplay + "><span class='glyphicon glyphicon-play'/></a> Sequence : " + aTrack.videos_left[k].sequence + "</td><td>" + aTrack.videos_left[k].name + "<br/>" + Math.floor(aTrack.videos_left[k].duration / 1000) + "s </td>"
+                aplayseq = "onclick=playVideo(" + (anAct.act - 1) + "," + j + "," + k + ")";
+                ahtmlTab += "<tr><td><a class='btn btn-success btn-xs' " + aplayseq + "><span class='glyphicon glyphicon-play'/></a> Sequence : " + aTrack.videos_left[k].sequence + "</td><td>" + aTrack.videos_left[k].name + "<br/>" + Math.floor(aTrack.videos_left[k].duration / 1000) + "s </td>"
                 ahtmlTab += "<td>" + aTrack.videos_right[k].name + "<br/>" + Math.floor(aTrack.videos_right[k].duration / 1000) + "s </td></tr>";
             }
             ahtmlTab += "</tbody></table>";
@@ -53,8 +56,7 @@ function playVideo(act, trk, seq) {
             command: "play",
             actidx: act,
             trackidx: trk,
-            sequenceidx: seq,
-            fadeout: $("#fadeout").prop('checked')
+            sequenceidx: seq
         });
         callback_fade = function() {};
     };
@@ -76,4 +78,11 @@ function endReached(msg) {
     $("#right_time").text(zeroFill(0, 4));
     $("#right_length").text(zeroFill(0, 4));
     $("#right_title").text("");
+    if ($("#playnext").prop('checked')) {
+        if (msg.sequenceidx < theCollection[msg.actidx].tracks[msg.trackidx].videos_left.length) {
+            msg.command = "play";
+            msg.sequenceidx += 1;
+            doSend(msg);
+        }
+    }
 }

@@ -46,11 +46,9 @@ function onMessage(evt) {
         collectionReceived(msg);
     }
     if (msg.fadefinished) {
-        console.log(msg);
         callback_fade();
     }
     if (msg.endreached) {
-        console.log(msg);
         endReached(msg);
     }
 }

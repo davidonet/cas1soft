@@ -61,22 +61,14 @@
                             <div class="progress-bar progress-bar-warning" style="width: 20%"></div>
                             <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
                         </div>
-                        <a href="#" class="btn btn-primary">
+                        <div class="text-center">
+                            <a href="#" class="btn btn-primary">
                             Vidéo <span class="glyphicon glyphicon-backward" />
                         </a>
-                        <a href="#" class="btn btn-primary">
+                            <a href="#" class="btn btn-primary">
                             Vidéo <span class="glyphicon glyphicon-forward" />
                         </a>
-                        <span class="pull-right">
-                        <a href="#" class="btn btn-warning">
-                            Acte <span class="glyphicon glyphicon-fast-backward" />
-                        </a>
-                        <a href="#" class="btn btn-warning">
-                            Acte <span class="glyphicon glyphicon-fast-forward" />
-                        </a>
-                        <br/>
-
-                        </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,40 +79,41 @@
                     <div class="panel-heading"> Conduite </div>
                     <div class="panel-body">
                         <div class="text-center">
-                            <a href="#" class="btn btn-lg btn-success" onclick="$.cas1.init()">
+                        <!--
+                            <a href="#" class="btn  btn-success" onclick="$.cas1.init()">
                             Init <span class="glyphicon glyphicon-asterisk" />
                          </a>
-                            <a href="#" class="btn btn-lg btn-danger" onclick="$.cas1.start()">
+                         -->
+                            <a href="#" class="btn  btn-danger" onclick="$.cas1.start()">
                             Départ <span class="glyphicon glyphicon-play" />
                         </a>
-                            <a href="#" class="btn btn-lg btn-info" onclick="$.cas1.start()">
-                            Pause <span class="glyphicon glyphicon-pause" />
+                            <a href="#" class="btn btn-warning">
+                            Acte <span class="glyphicon glyphicon-fast-forward" />
                         </a>
-                            <a href="#" class="btn btn-lg btn-default" onclick="$.cas1.fadeout()">
+
+                            <a href="#" class="btn  btn-default" onclick="$.cas1.fadeout()">
                             Fondu <span class="glyphicon glyphicon-sort-by-attributes-alt" />
                         </a>
                         </div>
                         <h3>Options</h3>
-                        <p>
-                            <input type="checkbox" id="fadeout"> Fondu au noir avant chaque transition
-                        </p>
-                        <p>
-                            <input type="checkbox"> Sélection aléatoire de la piste
-                        </p>
+                        <div class="col-md-6">
+                            <p>
+                                <input type="checkbox" id="fadeout"> Fondu au noir avant changement manuel
+                            </p>
+                            <p>
+                                <input type="checkbox" id="playnext"> Enchainer les videos de la piste
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <input type="checkbox"> Sélection aléatoire de la piste
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading"> Trace </div>
-                    <div class="panel-body">
-                        <div id="trace"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="" id="trace"></div>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
