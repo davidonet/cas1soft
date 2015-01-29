@@ -1,16 +1,17 @@
 #! /usr/bin/python2
 
 
-from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
-
-from threading import Thread
-
 import json
 import gtk
 import vlc
 import math
-from folderscan import VideoCollection
+import sched
+import time
 
+from threading import Thread, Timer
+
+from folderscan import VideoCollection
+from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
 
 gtk.gdk.threads_init()
 instance = vlc.Instance("--no-xlib")
@@ -29,6 +30,7 @@ class VideoClass(WebSocket):
         videos.add(self.vleft)
         self.vright = VLCContainer()
         videos.add(self.vright)
+
         self.window.show_all()
         if 'videoCollection' not in globals():
             Thread(target=VideoCollection, args=(
@@ -51,6 +53,8 @@ class VideoClass(WebSocket):
         right_vid = videoCollection["collection"][msg["actidx"]]["tracks"][
             msg["trackidx"]]["videos_right"][msg["sequenceidx"]]["filename"]
 
+        self.currentSeq = msg
+
         self.vleft.player.set_media(
             instance.media_new(left_vid))
         self.vright.player.set_media(
@@ -63,9 +67,59 @@ class VideoClass(WebSocket):
 
         self.vlc_events.event_attach(
             vlc.EventType.MediaPlayerPositionChanged, self.positionChanged)
+        self.vlc_events.event_attach(
+            vlc.EventType.MediaPlayerEndReached, self.endReached)
 
         self.vleft.player.play()
+        self.vleft.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, False)
+
         self.vright.player.play()
+        self.vright.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, False)
+
+        self.vleft.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Brightness, 1.0)
+        self.vright.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Brightness, 1.0)
+        self.vleft.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Saturation, 1.0)
+        self.vright.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Saturation, 1.0)
+
+    def fadeStep(self):
+        self.vleft.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, True)
+        self.vright.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, True)
+        if(0 < self.brightness):
+            self.vleft.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Brightness, self.brightness / 100.0)
+            self.vright.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Brightness, self.brightness / 100.0)
+            self.vleft.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Saturation, self.brightness / 100.0)
+            self.vright.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Saturation, self.brightness / 100.0)
+            self.brightness -= .5
+            self.fadetimer = Timer(.05, self.fadeStep, ())
+            self.fadetimer.start()
+        else:
+            self.vleft.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Brightness, 0.0)
+            self.vright.player.video_set_adjust_float(
+                vlc.VideoAdjustOption.Brightness, 0.0)
+            self.vleft.player.stop()
+            self.vright.player.stop()
+            self.sendMessage(json.dumps({"fadefinished": True}))
+
+    def fadeOut(self):
+        self.vleft.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, True)
+        self.vright.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, True)
+        self.brightness = 100.0
+        self.fadeStep()
 
     def positionChanged(self, pos):
         msg = {
@@ -84,6 +138,11 @@ class VideoClass(WebSocket):
         }
         self.sendMessage(json.dumps(msg))
 
+    def endReached(self,foo):
+        msg = self.currentSeq
+        msg["endreached"]=True;
+        self.sendMessage(json.dumps(msg))
+
     def handleConnected(self):
         print(self.address, "connected")
 
@@ -92,6 +151,7 @@ class VideoClass(WebSocket):
         self.vleft.player.stop()
         self.vright.player.stop()
         self.window.destroy()
+        self.fadetimer.cancel()
 
     def handleMessage(self):
         if self.data is None:
@@ -108,8 +168,8 @@ class VideoClass(WebSocket):
                     self.appInit()
                 if(msg["command"] == "play"):
                     self.play(msg)
-                if(msg["command"] == "collection"):
-                    print(self.collection)
+                if(msg["command"] == "fadeout"):
+                    self.fadeOut()
             except Exception as e:
                 print("Exception", e)
 
@@ -119,6 +179,7 @@ class VLCWidget(gtk.DrawingArea):
     def __init__(self, *p):
         gtk.DrawingArea.__init__(self)
         self.player = instance.media_player_new()
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0, 0, 0, 0))
 
         def handle_embed(*args):
             self.player.set_xwindow(self.window.xid)

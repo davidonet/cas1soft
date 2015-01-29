@@ -32,14 +32,26 @@ function onMessage(evt) {
         $("#left_time").text(zeroFill(msg.left_screen.time, 4));
         $("#left_length").text(zeroFill(msg.left_screen.length, 4));
         title = msg.left_screen.mrl.split("/");
-        $("#left_title").text(title[title.length - 1])
+        $("#left_title").text(title[title.length - 1]);
     }
     if (msg.right_screen) {
         $("#right_progress").css("width", msg.right_screen.pos + "%");
         $("#right_time").text(zeroFill(msg.right_screen.time, 4));
         $("#right_length").text(zeroFill(msg.right_screen.length, 4));
         title = msg.right_screen.mrl.split("/");
-        $("#right_title").text(title[title.length - 1])
+        $("#right_title").text(title[title.length - 1]);
+    }
+    if (msg.collection) {
+        console.log(msg);
+        collectionReceived(msg);
+    }
+    if (msg.fadefinished) {
+        console.log(msg);
+        callback_fade();
+    }
+    if (msg.endreached) {
+        console.log(msg);
+        endReached(msg);
     }
 }
 
