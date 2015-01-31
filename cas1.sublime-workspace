@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"__",
+				"__init__"
+			],
+			[
+				"act",
+				"actElt"
+			],
+			[
+				"a",
+				"append"
+			],
+			[
+				"se",
+				"sequenceidx"
+			],
+			[
 				"main",
 				"mainbox"
 			],
@@ -16,16 +32,8 @@
 				"background-color"
 			],
 			[
-				"se",
-				"sequence"
-			],
-			[
 				"tra",
 				"track"
-			],
-			[
-				"a",
-				"ahtmlTab"
 			],
 			[
 				"ex",
@@ -67,23 +75,7 @@
 			"file": "server/cas1server.py",
 			"settings":
 			{
-				"buffer_size": 6956,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "www/js/main.js",
-			"settings":
-			{
-				"buffer_size": 2841,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "www/js/ws.js",
-			"settings":
-			{
-				"buffer_size": 1979,
+				"buffer_size": 7268,
 				"line_ending": "Unix"
 			}
 		},
@@ -91,8 +83,24 @@
 			"file": "www/index.html",
 			"settings":
 			{
-				"buffer_size": 5548,
+				"buffer_size": 5234,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "www/js/main.js",
+			"settings":
+			{
+				"buffer_size": 3331,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "research/pyplayer/SimpleWebSocketServer.py",
+			"settings":
+			{
+				"buffer_size": 18761,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -136,18 +144,20 @@
 	"expanded_folders":
 	[
 		"/home/dolivari/dev/cas1soft",
+		"/home/dolivari/dev/cas1soft/research",
+		"/home/dolivari/dev/cas1soft/research/pyplayer",
 		"/home/dolivari/dev/cas1soft/server",
 		"/home/dolivari/dev/cas1soft/www",
 		"/home/dolivari/dev/cas1soft/www/js"
 	],
 	"file_history":
 	[
-		"/home/dolivari/dev/cas1soft/server/cas1server.py",
-		"/home/dolivari/dev/cas1soft/www/js/main.js",
-		"/home/dolivari/dev/cas1soft/www/css/main.css",
 		"/home/dolivari/dev/cas1soft/www/index.html",
-		"/home/dolivari/dev/cas1soft/server/folderscan.py",
+		"/home/dolivari/dev/cas1soft/www/js/main.js",
 		"/home/dolivari/dev/cas1soft/www/js/ws.js",
+		"/home/dolivari/dev/cas1soft/server/cas1server.py",
+		"/home/dolivari/dev/cas1soft/www/css/main.css",
+		"/home/dolivari/dev/cas1soft/server/folderscan.py",
 		"/home/dolivari/.config/sublime-text-3/Packages/JSHint Gutter/JSHint.sublime-settings",
 		"/home/dolivari/dev/cas1soft/research/pyplayer/index.html",
 		"/home/dolivari/dev/illkept/chromeapp/main.html",
@@ -201,7 +211,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -210,15 +220,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6956,
+						"buffer_size": 7268,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5111,
-								5111
+								5752,
+								5752
 							]
 						],
 						"settings":
@@ -228,7 +238,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 840.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -236,79 +246,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "www/js/main.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2841,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2420,
-								2420
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 405.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "www/js/ws.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1979,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1543,
-								1543
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 90.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "www/index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5548,
+						"buffer_size": 5234,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4511,
-								4511
+								3601,
+								3601
 							]
 						],
 						"settings":
@@ -318,7 +268,67 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 990.0,
+						"translation.y": 585.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "www/js/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3331,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								434,
+								434
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 540.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "research/pyplayer/SimpleWebSocketServer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17230,
+								17230
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 3,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8060.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,

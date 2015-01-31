@@ -14,7 +14,7 @@ from folderscan import VideoCollection
 from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
 
 gtk.gdk.threads_init()
-instance = vlc.Instance("--no-xlib")
+instance = vlc.Instance("--no-xlib","--no-audio")
 
 
 
