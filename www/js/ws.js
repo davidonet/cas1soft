@@ -7,7 +7,7 @@ function zeroFill(number, width) {
 }
 
 function doConnect(onOpen) {
-    websocket = new WebSocket("ws://localhost:8888/");
+    websocket = new WebSocket("ws://"+window.location.hostname+":8888/");
     websocket.onopen = onOpen;
     websocket.onclose = function(evt) {
         onClose(evt)
