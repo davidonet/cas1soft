@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <title>CAS_1 - Nu Collectif</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-slider.css" rel="stylesheet">
@@ -11,8 +11,21 @@
 </head>
 
 <body>
+    <div class="modal" id="analyzebox">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-warning">Information</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Analyse des videos en cours...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="container navbar-fixed-top" style="margin-top:8px">
+
+    <div class="container" style="margin-top:8px">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 style="margin-top:0;margin-bottom:8px">
@@ -21,16 +34,15 @@
                 <span class="label label-info" id="cur_track">Piste </span>
                 </span>
                 <span class="pull-right">
-                Temps restant : <span id="cur_track_remain">0</span> s
+                Fin de l'acte dans : <span id="cur_track_remain">0</span> s
                 </h2>
-
             </div>
             <div class="panel-body">
                 <div class="progress">
                     <div class="progress-bar progress-bar-primary" id="track_progress" style="width: 0%;"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading"> Vidéo gauche : <span id="left_title">Title</span>
                             </div>
@@ -45,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading"> Vidéo droite : <span id="right_title">Title</span>
                             </div>
@@ -60,7 +72,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                <a class="btn  btn-danger" onclick="$.cas1.start()">
+                    <a class="btn  btn-danger" onclick="$.cas1.start()">
                             Départ <span class="glyphicon glyphicon-play" />
                         </a>
                     <a class="btn btn-primary" onclick="$.cas1.previous()">
@@ -83,14 +95,11 @@
 
     <div class="container">
         <div class="row">
-            <div style="height:344px"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-heading"> Options </div>
                     <div class="panel-body">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <p>
                                 <input type="checkbox" id="fadeout"> Fondu au noir avant changement manuel
                             </p>
@@ -98,7 +107,7 @@
                                 <input type="checkbox" id="playnext"> Enchainer les videos de la piste
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <p>
                                 <input type="checkbox" id="randomtrack"> Sélection aléatoire de la piste
                             </p>

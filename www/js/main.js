@@ -93,10 +93,9 @@ $(function() {
 
         }
     };
-
-
     $("#playnext").prop('checked', true);
     $("#randomtrack").prop('checked', true);
+    $("#analyzebox").modal('show');
 });
 
 
@@ -126,6 +125,7 @@ function collectionReceived(msg) {
             $trkElt.append(ahtmlTab);
         }
     }
+    $("#analyzebox").modal('hide');
 }
 
 
@@ -138,6 +138,9 @@ function playVideo(act, trk, seq) {
             sequenceidx: seq
         });
         callback_fade = function() {};
+        $('html, body').animate({
+            scrollTop: 0
+        });
     };
     if ($("#fadeout").prop('checked')) {
         doSend({
