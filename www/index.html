@@ -11,67 +11,72 @@
 </head>
 
 <body>
-    <div class="container navbar-fixed-top" style="background-color: grey;">
-        <div class="row">
-            <div style="height:16px"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading"> Vidéo gauche : <span id="left_title">Title</span>
-                    </div>
-                    <div class="panel-body">
 
-                        <div class="progress">
-                            <div class="progress-bar" id="left_progress" style="width: 0%;"></div>
-                        </div>
-
-                        <p>Position : <span id="left_time">0</span> / <span id="left_length">0</span> s
-                        </p>
-                    </div>
-                </div>
+    <div class="container navbar-fixed-top" style="margin-top:16px">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span>
+                Lecture en cours : 
+                <span class="label label-primary" id="cur_act">Acte </span>
+                <span class="label label-info" id="cur_track">Piste </span>
+                </span>
+                <span class="pull-right">
+                Temps restant : <span id="cur_track_remain">0</span> s
+                </span>
             </div>
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading"> Vidéo droite : <span id="right_title">Title</span>
-                    </div>
-                    <div class="panel-body">
+            <div class="panel-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-primary" id="track_progress" style="width: 0%;"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> Vidéo gauche : <span id="left_title">Title</span>
+                            </div>
+                            <div class="panel-body">
 
-                        <div class="progress">
-                            <div class="progress-bar" id="right_progress" style="width: 0%;"></div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" id="left_progress" style="width: 0%;"></div>
+                                </div>
+
+                                <p>Position : <span id="left_time">0</span> / <span id="left_length">0</span> s
+                                </p>
+                            </div>
                         </div>
-                        <p>Position : <span id="right_time">0</span> / <span id="right_length">0</span> s
-                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> Vidéo droite : <span id="right_title">Title</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" id="right_progress" style="width: 0%;"></div>
+                                </div>
+                                <p>Position : <span id="right_time">0</span> / <span id="right_length">0</span> s
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <a class="btn btn-primary" onclick="$.cas1.previous()">
+                            Vidéo <span class="glyphicon glyphicon-backward" />
+                        </a>
+                    <a class="btn btn-primary" onclick="$.cas1.pause()">
+                        <span class="glyphicon glyphicon-pause" />
+                    </a>
+                    <a class="btn btn-primary" onclick="$.cas1.next()">
+                            Vidéo <span class="glyphicon glyphicon-forward" />
+                        </a>
+                </div>
+
             </div>
         </div>
     </div>
+
     <div class="container">
         <div class="row">
-            <div style="height:192px"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading"> Acte </div>
-                    <div class="panel-body">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success" style="width: 35%"></div>
-                            <div class="progress-bar progress-bar-warning" style="width: 20%"></div>
-                            <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
-                        </div>
-                        <div class="text-center">
-                            <a href="#" class="btn btn-primary">
-                            Vidéo <span class="glyphicon glyphicon-backward" />
-                        </a>
-                            <a href="#" class="btn btn-primary">
-                            Vidéo <span class="glyphicon glyphicon-forward" />
-                        </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div style="height:344px"></div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -79,19 +84,18 @@
                     <div class="panel-heading"> Conduite </div>
                     <div class="panel-body">
                         <div class="text-center">
-                        <!--
+                            <!--
                             <a href="#" class="btn  btn-success" onclick="$.cas1.init()">
                             Init <span class="glyphicon glyphicon-asterisk" />
                          </a>
                          -->
-                            <a href="#" class="btn  btn-danger" onclick="$.cas1.start()">
+                            <a class="btn  btn-danger" onclick="$.cas1.start()">
                             Départ <span class="glyphicon glyphicon-play" />
                         </a>
-                            <a href="#" class="btn btn-warning">
+                            <a class="btn btn-warning">
                             Acte <span class="glyphicon glyphicon-fast-forward" />
                         </a>
-
-                            <a href="#" class="btn  btn-default" onclick="$.cas1.fadeout()">
+                            <a class="btn  btn-default" onclick="$.cas1.fadeout()">
                             Fondu <span class="glyphicon glyphicon-sort-by-attributes-alt" />
                         </a>
                         </div>

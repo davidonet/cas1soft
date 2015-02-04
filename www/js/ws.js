@@ -7,16 +7,16 @@ function zeroFill(number, width) {
 }
 
 function doConnect(onOpen) {
-    websocket = new WebSocket("ws://"+window.location.hostname+":8888/");
+    websocket = new WebSocket("ws://" + window.location.hostname + ":8888/");
     websocket.onopen = onOpen;
     websocket.onclose = function(evt) {
-        onClose(evt)
+        onClose(evt);
     };
     websocket.onmessage = function(evt) {
-        onMessage(evt)
+        onMessage(evt);
     };
     websocket.onerror = function(evt) {
-        onError(evt)
+        onError(evt);
     };
 }
 
@@ -27,6 +27,7 @@ function onClose(evt) {
 
 function onMessage(evt) {
     msg = JSON.parse(evt.data);
+    $.cas1.msg = msg;
     if (msg.left_screen) {
         $("#left_progress").css("width", msg.left_screen.pos + "%");
         $("#left_time").text(zeroFill(msg.left_screen.time, 4));
@@ -41,6 +42,31 @@ function onMessage(evt) {
         title = msg.right_screen.mrl.split("/");
         $("#right_title").text(title[title.length - 1]);
     }
+    if (typeof msg.actidx !== 'undefined') {
+        $("#cur_act").text("Acte " + (msg.actidx + 1));
+        $("#cur_track").text("Piste " + (msg.trackidx + 1));
+        var totalleft = Math.floor(theCollection[msg.actidx].tracks[msg.trackidx].duration_left / 1000);
+        var totalright = Math.floor(theCollection[msg.actidx].tracks[msg.trackidx].duration_right / 1000);
+        if (totalright < totalleft) {
+            var timeplayed = msg.left_screen.time;
+            for (var i = 0; i < msg.sequenceidx; i++) {
+                timeplayed += Math.floor(theCollection[msg.actidx].tracks[msg.trackidx].videos_left[i].duration / 1000);
+            };
+            var remain = totalleft - timeplayed;
+            $("#track_progress").css("width", 100 * (timeplayed / totalleft) + "%");
+        } else {
+            var timeplayed = msg.right_screen.time;
+            for (var i = 0; i < msg.sequenceidx; i++) {
+                timeplayed += Math.floor(theCollection[msg.actidx].tracks[msg.trackidx].videos_right[i].duration / 1000);
+            };
+            var remain = totalright - timeplayed;
+            $("#track_progress").css("width", 100 * (timeplayed / totalright) + "%");
+        }
+        $("#cur_track_remain").text( Math.floor(remain / 60) +" min "+(remain % 60));
+
+
+    }
+
     if (msg.collection) {
         console.log(msg);
         collectionReceived(msg);
@@ -60,7 +86,7 @@ function onError(evt) {
 
 function doSend(message) {
     msg = JSON.stringify(message);
-    writeToScreen("sent: " + msg + '\n');
+    //writeToScreen("sent: " + msg + '\n');
     websocket.send(msg);
 }
 
@@ -69,5 +95,5 @@ function doDisconnect() {
 }
 
 function writeToScreen(message) {
-    console.log(message)
+    console.log(message);
 }
