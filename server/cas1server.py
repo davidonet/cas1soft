@@ -46,7 +46,7 @@ gc.disable()
 class VideoClass(WebSocket):
 
     def appInit(self):
-        self.instance = vlc.Instance("--no-xlib", "--no-audio")
+        self.instance = vlc.Instance("--no-xlib", "--no-audio","--quiet")
         self.window = gtk.Window()
         mainbox = gtk.VBox()
         videos = gtk.HBox()
@@ -75,6 +75,7 @@ class VideoClass(WebSocket):
     def play(self, msg):
 
         if 0 <= msg["actidx"] and 0 <= msg["trackidx"] and 0 <= msg["sequenceidx"]:
+
             left_vid = videoCollection["collection"][msg["actidx"]]["tracks"][
                 msg["trackidx"]]["videos_left"][msg["sequenceidx"]]["filename"]
 
@@ -87,9 +88,9 @@ class VideoClass(WebSocket):
             self.vright.player.stop()
             gc.collect()
 
-
             self.vleft.player.set_media(
                 self.instance.media_new(left_vid))
+
             self.vright.player.set_media(
                 self.instance.media_new(right_vid))
 
@@ -100,6 +101,7 @@ class VideoClass(WebSocket):
 
             self.vlc_events.event_attach(
                 vlc.EventType.MediaPlayerPositionChanged, self.positionChanged)
+
             self.vlc_events.event_attach(
                 vlc.EventType.MediaPlayerEndReached, self.endReached)
 
@@ -115,10 +117,12 @@ class VideoClass(WebSocket):
                 vlc.VideoAdjustOption.Brightness, 1.0)
             self.vright.player.video_set_adjust_float(
                 vlc.VideoAdjustOption.Brightness, 1.0)
+
             self.vleft.player.video_set_adjust_float(
                 vlc.VideoAdjustOption.Saturation, 1.0)
             self.vright.player.video_set_adjust_float(
                 vlc.VideoAdjustOption.Saturation, 1.0)
+
         else:
             print("Bad play")
 

@@ -12,17 +12,18 @@
 
 <body>
 
-    <div class="container navbar-fixed-top" style="margin-top:16px">
+    <div class="container navbar-fixed-top" style="margin-top:8px">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span>
-                Lecture en cours : 
+                <h2 style="margin-top:0;margin-bottom:8px">
                 <span class="label label-primary" id="cur_act">Acte </span>
+                &nbsp;
                 <span class="label label-info" id="cur_track">Piste </span>
                 </span>
                 <span class="pull-right">
                 Temps restant : <span id="cur_track_remain">0</span> s
-                </span>
+                </h2>
+
             </div>
             <div class="panel-body">
                 <div class="progress">
@@ -59,6 +60,9 @@
                     </div>
                 </div>
                 <div class="text-center">
+                <a class="btn  btn-danger" onclick="$.cas1.start()">
+                            Départ <span class="glyphicon glyphicon-play" />
+                        </a>
                     <a class="btn btn-primary" onclick="$.cas1.previous()">
                             Vidéo <span class="glyphicon glyphicon-backward" />
                         </a>
@@ -67,6 +71,9 @@
                     </a>
                     <a class="btn btn-primary" onclick="$.cas1.next()">
                             Vidéo <span class="glyphicon glyphicon-forward" />
+                        </a>
+                    <a class="btn btn-warning" onclick="$.cas1.nextact()">
+                            Acte <span class="glyphicon glyphicon-fast-forward" />
                         </a>
                 </div>
 
@@ -81,25 +88,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> Conduite </div>
+                    <div class="panel-heading"> Options </div>
                     <div class="panel-body">
-                        <div class="text-center">
-                            <!--
-                            <a href="#" class="btn  btn-success" onclick="$.cas1.init()">
-                            Init <span class="glyphicon glyphicon-asterisk" />
-                         </a>
-                         -->
-                            <a class="btn  btn-danger" onclick="$.cas1.start()">
-                            Départ <span class="glyphicon glyphicon-play" />
-                        </a>
-                            <a class="btn btn-warning">
-                            Acte <span class="glyphicon glyphicon-fast-forward" />
-                        </a>
-                            <a class="btn  btn-default" onclick="$.cas1.fadeout()">
-                            Fondu <span class="glyphicon glyphicon-sort-by-attributes-alt" />
-                        </a>
-                        </div>
-                        <h3>Options</h3>
                         <div class="col-md-6">
                             <p>
                                 <input type="checkbox" id="fadeout"> Fondu au noir avant changement manuel
@@ -110,7 +100,7 @@
                         </div>
                         <div class="col-md-6">
                             <p>
-                                <input type="checkbox"> Sélection aléatoire de la piste
+                                <input type="checkbox" id="randomtrack"> Sélection aléatoire de la piste
                             </p>
                         </div>
                     </div>

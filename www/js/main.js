@@ -9,7 +9,9 @@ $(function() {
     $.cas1.start = function() {
         doSend({
             command: "play",
-            prefix: "/opt/storage/CAS1_SRC/ACTE 4/A4-P1/CAS1_A4P1V20"
+            actidx: 0,
+            trackidx: 0,
+            sequenceidx: 0
         });
     };
     $.cas1.fadeout = function() {
@@ -65,8 +67,36 @@ $(function() {
 
         }
     };
+    $.cas1.nextact = function() {
+        if ($.cas1.msg.actidx < theCollection.length - 1) {
+            var track = 0;
+            if ($("#randomtrack").prop('checked'))
+                track = Math.floor(Math.random() * theCollection[$.cas1.msg.actidx + 1].tracks.length)
+            console.log(theCollection[$.cas1.msg.actidx + 1].tracks.length, track)
+            var msg = {
+                command: "play",
+                actidx: $.cas1.msg.actidx + 1,
+                trackidx: track,
+                sequenceidx: 0
+            };
+            callback_fade = function() {
+                doSend(msg);
+                callback_fade = function() {};
+            };
+            if ($("#fadeout").prop('checked')) {
+                doSend({
+                    command: "fadeout"
+                });
+            } else {
+                callback_fade();
+            }
+
+        }
+    };
+
 
     $("#playnext").prop('checked', true);
+    $("#randomtrack").prop('checked', true);
 });
 
 
@@ -76,13 +106,13 @@ function collectionReceived(msg) {
     for (var i = aCol.length - 1; i >= 0; i--) {
         var anAct = aCol[i];
         var $panel = $("<div class='row'></div>");
-        var $actElt = $("<div class='panel panel-primary'><div class='panel-heading'><h2>Acte " + anAct.act + "</h2></div></div>");
+        var $actElt = $("<div class='panel panel-primary'><div class='panel-heading'><h2 style='margin-top:0;margin-bottom:0'>Acte " + anAct.act + "</h2></div></div>");
         $('#trace').prepend($panel);
         $panel.append($actElt);
         for (var j = 0; j < anAct.tracks.length; j++) {
             var aTrack = anAct.tracks[j];
             aplayact = "onclick=playVideo(" + (anAct.act - 1) + "," + j + "," + 0 + ")";
-            var $trkElt = $("<div class='panel-body'><h3><a class='btn btn-info btn-sm' " + aplayact + "><span class='glyphicon glyphicon-play'/></a> Piste " + aTrack.track + "</h3></div>");
+            var $trkElt = $("<div class='panel-body'><h3 ><a class='btn btn-info btn-sm' " + aplayact + "><span class='glyphicon glyphicon-play'/></a> Piste " + aTrack.track + "</h3></div>");
             $actElt.append($trkElt);
             var ahtmlTab = "<table class='table table-bordered'><thead><tr><th>&nbsp;</th><th>Gauche</th><th>Droite</th></tr></thead><tbody>";
             ahtmlTab += "<tr><td>Durée totale</td><td>" + Math.floor(aTrack.duration_left / 1000) + "s</td><td>" + Math.floor(aTrack.duration_right / 1000) + "s</td></tr>";
