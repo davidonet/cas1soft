@@ -143,14 +143,18 @@ $(function() {
     $("#randomtrack").prop('checked', true);
     $("#analyzebox").modal('show');
     $("#shutterbtn").attr('disabled', true);
+
+    audioInit();
 });
 
 function activateShutter() {
     $("#shutterbtn").attr('disabled', false);
+    onBeat = $.cas1.shutter;
 }
 
 function deactivateShutter() {
     $("#shutterbtn").attr('disabled', true);
+    onBeat = function() {};
 }
 
 
@@ -232,7 +236,7 @@ function endReached(msg) {
             msg.right_screen = undefined;
             msg.shutter = false;
             deactivateShutter();
-            $("#fadeout").attr("checked",false);
+            $("#fadeout").attr("checked", false);
             doSend(msg);
         }
     }

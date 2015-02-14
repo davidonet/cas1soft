@@ -113,9 +113,11 @@
                             </p>
                             <p>
                                 <a class="btn btn-xs btn-warning" id="shutterbtn" onclick="$.cas1.shutter()">
-                            <span class="glyphicon glyphicon-flash" /> Shutter <span class="glyphicon glyphicon-flash" />
-                        </a>
-                            </p>
+                                    <span class="glyphicon glyphicon-flash" /> Shutter <span class="glyphicon glyphicon-flash" />
+                                </a>&nbsp;<span class="label label-default" id="beatCheck">&nbsp;</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" style="-webkit-transition: none;-moz-transition: none;-ms-transition: none;-o-transition: none; transition:none;" id="beatLevel" style="width: 0%;"></div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -125,8 +127,10 @@
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/minivents.min.js"></script>
     <script src="js/ws.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/beatDetect.js"></script>
 </body>
 
 </html>
