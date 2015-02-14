@@ -75,8 +75,8 @@
                     <a class="btn  btn-danger" onclick="$.cas1.start()">
                             Départ <span class="glyphicon glyphicon-play" />
                         </a>
-                    <a class="btn btn-primary" onclick="$.cas1.previous()">
-                            Vidéo <span class="glyphicon glyphicon-backward" />
+                    <a class="btn btn-primary" onclick="$.cas1.restart()">
+                            Vidéo <span class="glyphicon glyphicon-repeat" />
                         </a>
                     <a class="btn btn-primary" onclick="$.cas1.pause()">
                         <span class="glyphicon glyphicon-pause" />
@@ -110,6 +110,11 @@
                         <div class="col-sm-6">
                             <p>
                                 <input type="checkbox" id="randomtrack"> Sélection aléatoire de la piste
+                            </p>
+                            <p>
+                                <a class="btn btn-xs btn-warning" id="shutterbtn" onclick="$.cas1.shutter()">
+                            <span class="glyphicon glyphicon-flash" /> Shutter <span class="glyphicon glyphicon-flash" />
+                        </a>
                             </p>
                         </div>
                     </div>

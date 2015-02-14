@@ -11,7 +11,8 @@ $(function() {
             command: "play",
             actidx: 0,
             trackidx: 0,
-            sequenceidx: 0
+            sequenceidx: 0,
+            shutter: false
         });
     };
     $.cas1.fadeout = function() {
@@ -19,25 +20,25 @@ $(function() {
             command: "fadeout"
         });
     };
-    $.cas1.previous = function() {
-        if (0 < $.cas1.msg.sequenceidx) {
-            var msg = {
-                command: "play",
-                actidx: $.cas1.msg.actidx,
-                trackidx: $.cas1.msg.trackidx,
-                sequenceidx: $.cas1.msg.sequenceidx - 1
-            };
-            callback_fade = function() {
-                doSend(msg);
-                callback_fade = function() {};
-            };
-            if ($("#fadeout").prop('checked')) {
-                doSend({
-                    command: "fadeout"
-                });
-            } else {
-                callback_fade();
-            }
+    $.cas1.restart = function() {
+        var msg = {
+            command: "play",
+            actidx: $.cas1.msg.actidx,
+            trackidx: $.cas1.msg.trackidx,
+            sequenceidx: $.cas1.msg.sequenceidx,
+            shutter: (($.cas1.msg.actidx == 4) && ($.cas1.msg.sequenceidx == 0))
+        };
+        callback_fade = function() {
+            doSend(msg);
+            $("#fadeout").attr("checked", false)
+            callback_fade = function() {};
+        };
+        if ($("#fadeout").prop('checked')) {
+            doSend({
+                command: "fadeout"
+            });
+        } else {
+            callback_fade();
         }
     };
     $.cas1.pause = function() {
@@ -51,10 +52,12 @@ $(function() {
                 command: "play",
                 actidx: $.cas1.msg.actidx,
                 trackidx: $.cas1.msg.trackidx,
-                sequenceidx: $.cas1.msg.sequenceidx + 1
+                sequenceidx: $.cas1.msg.sequenceidx + 1,
+                shutter: false
             };
             callback_fade = function() {
                 doSend(msg);
+                $("#fadeout").attr("checked", false)
                 callback_fade = function() {};
             };
             if ($("#fadeout").prop('checked')) {
@@ -67,6 +70,42 @@ $(function() {
 
         }
     };
+    $.cas1.shutter = function() {
+        var side1 = "left"
+        var side2 = "right"
+        if (Math.random() < .5) {
+            side1 = "right";
+            side2 = "left"
+        }
+
+        doSend({
+            command: "shutter",
+            side: side1,
+            state: "on"
+        });
+        setTimeout(function() {
+            doSend({
+                command: "shutter",
+                side: side1,
+                state: "off"
+            });
+            setTimeout(function() {
+                doSend({
+                    command: "shutter",
+                    side: side2,
+                    state: "on"
+                });
+                setTimeout(function() {
+                    doSend({
+                        command: "shutter",
+                        side: side2,
+                        state: "off"
+                    });
+
+                }, 40);
+            }, 40);
+        }, 40);
+    };
     $.cas1.nextact = function() {
         if ($.cas1.msg.actidx < theCollection.length - 1) {
             var track = 0;
@@ -77,10 +116,17 @@ $(function() {
                 command: "play",
                 actidx: $.cas1.msg.actidx + 1,
                 trackidx: track,
-                sequenceidx: 0
+                sequenceidx: 0,
+                shutter: ($.cas1.msg.actidx + 1 == 4)
             };
+            if ($.cas1.msg.actidx + 1 == 4)
+                activateShutter();
+            else
+                deactivateShutter();
+
             callback_fade = function() {
                 doSend(msg);
+                $("#fadeout").attr("checked", false)
                 callback_fade = function() {};
             };
             if ($("#fadeout").prop('checked')) {
@@ -96,7 +142,16 @@ $(function() {
     $("#playnext").prop('checked', true);
     $("#randomtrack").prop('checked', true);
     $("#analyzebox").modal('show');
+    $("#shutterbtn").attr('disabled', true);
 });
+
+function activateShutter() {
+    $("#shutterbtn").attr('disabled', false);
+}
+
+function deactivateShutter() {
+    $("#shutterbtn").attr('disabled', true);
+}
 
 
 function collectionReceived(msg) {
@@ -131,12 +186,20 @@ function collectionReceived(msg) {
 
 function playVideo(act, trk, seq) {
     callback_fade = function() {
+
         doSend({
             command: "play",
             actidx: act,
             trackidx: trk,
-            sequenceidx: seq
+            sequenceidx: seq,
+            shutter: ((act == 4) && (seq == 0))
         });
+
+        if ((act == 4) && (seq == 0))
+            activateShutter();
+        else
+            deactivateShutter();
+        $("#fadeout").attr("checked", false)
         callback_fade = function() {};
         $('html, body').animate({
             scrollTop: 0
@@ -167,6 +230,9 @@ function endReached(msg) {
             msg.endreached = false;
             msg.left_screen = undefined;
             msg.right_screen = undefined;
+            msg.shutter = false;
+            deactivateShutter();
+            $("#fadeout").attr("checked",false);
             doSend(msg);
         }
     }

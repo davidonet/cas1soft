@@ -2,7 +2,7 @@
 
 # dual screen player with websocket interface
 # Copyright (C) 2014 David Olivari
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -40,13 +40,14 @@ gtk.gdk.threads_init()
 
 pp = pprint.PrettyPrinter(indent=4)
 
-gc.set_debug(gc.DEBUG_STATS  | gc.DEBUG_UNCOLLECTABLE)
+gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_UNCOLLECTABLE)
 gc.disable()
+
 
 class VideoClass(WebSocket):
 
     def appInit(self):
-        self.instance = vlc.Instance("--no-xlib", "--no-audio","--quiet")
+        self.instance = vlc.Instance("--no-xlib", "--no-audio", "--quiet")
         self.window = gtk.Window()
         mainbox = gtk.VBox()
         videos = gtk.HBox()
@@ -86,6 +87,7 @@ class VideoClass(WebSocket):
 
             self.vleft.player.stop()
             self.vright.player.stop()
+
             gc.collect()
 
             self.vleft.player.set_media(
@@ -105,26 +107,68 @@ class VideoClass(WebSocket):
             self.vlc_events.event_attach(
                 vlc.EventType.MediaPlayerEndReached, self.endReached)
 
+            if(msg["shutter"] == True):
+                self.vright.player.event_manager().event_attach(
+                    vlc.EventType.MediaPlayerVout, self.shutterOnPlay)
+                self.vleft.player.event_manager().event_attach(
+                    vlc.EventType.MediaPlayerVout, self.shutterOnPlay)
+            else:
+                self.vright.player.event_manager().event_attach(
+                    vlc.EventType.MediaPlayerVout, self.openOnPlay)
+                self.vleft.player.event_manager().event_attach(
+                    vlc.EventType.MediaPlayerVout, self.openOnPlay)
+
             self.vleft.player.play()
-            self.vleft.player.video_set_adjust_int(
-                vlc.VideoAdjustOption.Enable, False)
-
             self.vright.player.play()
-            self.vright.player.video_set_adjust_int(
-                vlc.VideoAdjustOption.Enable, False)
-
-            self.vleft.player.video_set_adjust_float(
-                vlc.VideoAdjustOption.Brightness, 1.0)
-            self.vright.player.video_set_adjust_float(
-                vlc.VideoAdjustOption.Brightness, 1.0)
-
-            self.vleft.player.video_set_adjust_float(
-                vlc.VideoAdjustOption.Saturation, 1.0)
-            self.vright.player.video_set_adjust_float(
-                vlc.VideoAdjustOption.Saturation, 1.0)
 
         else:
             print("Bad play")
+
+    def shutterOnPlay(self, evt):
+        self.shutter({
+            u'command': u'shutter', u'side': u'left', u'state': u'off'})
+        self.shutter({
+            u'command': u'shutter', u'side': u'right', u'state': u'off'})
+        self.vleft.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Saturation, 1.0)
+        self.vright.player.video_set_adjust_float(
+            vlc.VideoAdjustOption.Saturation, 1.0)
+        
+
+    def openOnPlay(self, evt):
+        self.shutter({
+            u'command': u'shutter', u'side': u'left', u'state': u'on'})
+        self.shutter({
+            u'command': u'shutter', u'side': u'right', u'state': u'on'})
+        
+    def shutter(self, msg):
+        if(msg["side"] == "left"):
+            self.vleft.player.video_set_adjust_int(
+                vlc.VideoAdjustOption.Enable, True)
+            if(msg["state"] == "off"):
+                self.vleft.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Brightness, 0.0)
+                self.vleft.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Saturation, 0.0)
+            if(msg["state"] == "on"):
+                self.vleft.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Brightness, 1.0)
+                self.vleft.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Saturation, 1.0)
+
+        if(msg["side"] == "right"):
+            self.vright.player.video_set_adjust_int(
+                vlc.VideoAdjustOption.Enable, True)
+            if(msg["state"] == "off"):
+                self.vright.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Brightness, 0.0)
+                self.vright.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Saturation, 0.0)
+            if(msg["state"] == "on"):
+                self.vright.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Brightness, 1.0)
+                self.vright.player.video_set_adjust_float(
+                    vlc.VideoAdjustOption.Saturation, 1.0)
 
     def pause(self):
         self.vleft.player.pause()
@@ -232,6 +276,8 @@ class VideoClass(WebSocket):
                     self.fadeOut()
                 if(msg["command"] == "pause"):
                     self.pause()
+                if(msg["command"] == "shutter"):
+                    self.shutter(msg)
             except Exception as e:
                 print("Exception", e)
                 pp.pprint(msg)
@@ -239,7 +285,7 @@ class VideoClass(WebSocket):
 
 class VLCWidget(gtk.DrawingArea):
 
-    def __init__(self,instance):
+    def __init__(self, instance):
         gtk.DrawingArea.__init__(self)
         self.player = instance.media_player_new()
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0, 0, 0, 0))
