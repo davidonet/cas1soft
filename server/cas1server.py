@@ -60,7 +60,7 @@ class VideoClass(WebSocket):
         videos.add(self.vright)
         self.window.show_all()
         self.gtkthread = Thread(target=gtk.main).start()
-
+        self.vlc_events = self.vright.player.event_manager()
         if 'videoCollection' not in globals():
             Thread(target=VideoCollection, args=(
                 "/home/dolivari/Public/sequences/", self.scanDone)).start()
@@ -89,6 +89,9 @@ class VideoClass(WebSocket):
             self.vleft.player.stop()
             self.vright.player.stop()
 
+            self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
+            self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
+            
             gc.collect()
             
             self.media_left = self.instance.media_new(left_vid)
@@ -96,6 +99,7 @@ class VideoClass(WebSocket):
 
             self.media_right = self.instance.media_new(right_vid)
             self.vright.player.set_media(self.media_right)
+
 
             if(self.vleft.player.get_length() < self.vright.player.get_length()):
                 self.vlc_events = self.vright.player.event_manager()
@@ -224,6 +228,8 @@ class VideoClass(WebSocket):
     def endReached(self, foo):
         msg = self.currentSeq
         msg["endreached"] = True
+        self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
+        self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
         self.sendMessage(json.dumps(msg))
 
     def handleConnected(self):
