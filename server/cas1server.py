@@ -47,7 +47,8 @@ gc.disable()
 class VideoClass(WebSocket):
 
     def appInit(self):
-        self.instance = vlc.Instance("--no-xlib", "--no-audio", "--quiet")
+        self.instance = vlc.Instance("--no-audio", "--no-xlib","--quiet","--overlay")
+
         self.window = gtk.Window()
         mainbox = gtk.VBox()
         videos = gtk.HBox()
@@ -89,12 +90,12 @@ class VideoClass(WebSocket):
             self.vright.player.stop()
 
             gc.collect()
+            
+            self.media_left = self.instance.media_new(left_vid)
+            self.vleft.player.set_media(self.media_left)
 
-            self.vleft.player.set_media(
-                self.instance.media_new(left_vid))
-
-            self.vright.player.set_media(
-                self.instance.media_new(right_vid))
+            self.media_right = self.instance.media_new(right_vid)
+            self.vright.player.set_media(self.media_right)
 
             if(self.vleft.player.get_length() < self.vright.player.get_length()):
                 self.vlc_events = self.vright.player.event_manager()
@@ -125,14 +126,10 @@ class VideoClass(WebSocket):
             print("Bad play")
 
     def shutterOnPlay(self, evt):
-        self.shutter({
-            u'command': u'shutter', u'side': u'left', u'state': u'off'})
-        self.shutter({
-            u'command': u'shutter', u'side': u'right', u'state': u'off'})
-        self.vleft.player.video_set_adjust_float(
-            vlc.VideoAdjustOption.Saturation, 1.0)
-        self.vright.player.video_set_adjust_float(
-            vlc.VideoAdjustOption.Saturation, 1.0)
+        self.vleft.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, False)
+        self.vright.player.video_set_adjust_int(
+            vlc.VideoAdjustOption.Enable, False)
         
 
     def openOnPlay(self, evt):
@@ -294,7 +291,7 @@ class VLCWidget(gtk.DrawingArea):
             self.player.set_xwindow(self.window.xid)
             return True
         self.connect("map", handle_embed)
-        self.set_size_request(320, 180)
+        self.set_size_request(960,540)
 
 
 class VLCContainer(gtk.VBox):

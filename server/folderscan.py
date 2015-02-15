@@ -36,7 +36,7 @@ class VideoCollection:
         for f in sorted(os.listdir(path)):
             filename = path + f
             media_info = MediaInfo.parse(filename)
-            m = re.match(r"A(\d)_P(\d)_V(\d{2})_(.)_(.*)\.mp4", f)
+            m = re.match(r"A(\d)_P(\d)_V(\d{2})_(.)_(.*)\.mov", f)
             act = int(m.group(1))
             track = int(m.group(2))
             sequence = int(m.group(3))
