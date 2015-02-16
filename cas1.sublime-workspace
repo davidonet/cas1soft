@@ -4,20 +4,40 @@
 		"selected_items":
 		[
 			[
+				"left",
+				"left_vid"
+			],
+			[
+				"beat",
+				"beatCutOff"
+			],
+			[
+				"be",
+				"beatCutOff"
+			],
+			[
+				"on",
+				"onBeat"
+			],
+			[
+				"act",
+				"activateShutter"
+			],
+			[
+				"sh",
+				"shutterOnPlay"
+			],
+			[
+				"a",
+				"act"
+			],
+			[
 				"rando",
 				"randomtrack"
 			],
 			[
-				"act",
-				"actidx"
-			],
-			[
 				"__",
 				"__init__"
-			],
-			[
-				"a",
-				"append"
 			],
 			[
 				"se",
@@ -66,20 +86,24 @@
 			[
 				"onoep",
 				"onopen"
-			],
-			[
-				"on",
-				"onclick	Attr"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "server/folderscan.py",
+			"file": "server/cas1server.py",
 			"settings":
 			{
-				"buffer_size": 3161,
+				"buffer_size": 11365,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "www/index.html",
+			"settings":
+			{
+				"buffer_size": 6206,
 				"line_ending": "Unix"
 			}
 		}
@@ -125,14 +149,17 @@
 	[
 		"/home/dolivari/dev/cas1soft",
 		"/home/dolivari/dev/cas1soft/server",
-		"/home/dolivari/dev/cas1soft/www/css",
+		"/home/dolivari/dev/cas1soft/system",
+		"/home/dolivari/dev/cas1soft/www",
 		"/home/dolivari/dev/cas1soft/www/js"
 	],
 	"file_history":
 	[
 		"/home/dolivari/dev/cas1soft/www/js/main.js",
-		"/home/dolivari/dev/cas1soft/server/vlc.py",
+		"/home/dolivari/dev/cas1soft/www/js/beatDetect.js",
 		"/home/dolivari/dev/cas1soft/server/folderscan.py",
+		"/home/dolivari/dev/cas1soft/server/vlc.py",
+		"/home/dolivari/dev/cas1soft/system/xrandr.cfg",
 		"/home/dolivari/dev/cas1soft/server/cas1server.py",
 		"/home/dolivari/dev/cas1soft/www/js/ws.js",
 		"/home/dolivari/dev/cas1soft/www/index.html",
@@ -152,7 +179,6 @@
 		"/home/dolivari/.config/sublime-text-3/Packages/SublimeLinter/Default (Linux).sublime-keymap",
 		"/home/dolivari/dev/cas1soft/pyplayer/SimpleWebSocketServer.py",
 		"/home/dolivari/dev/cas1soft/pyplayer/index.html",
-		"/home/dolivari/dev/cas1soft/system/xrandr.cfg",
 		"/home/dolivari/.config/sublime-text-3/Packages/Python PEP8 Autoformat/Default (Linux).sublime-keymap",
 		"/home/dolivari/dev/cas1soft/pyplayer/pyplayer.py",
 		"/home/dolivari/VirtualBox VMs/archlinux-2009.02-x86/Machine/archlinux-2009.02-x86/archlinux-2009.02-x86.xml",
@@ -178,6 +204,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"xlib",
+			"vlc_events",
+			"        \n",
 			"callback",
 			"')",
 			"seq",
@@ -204,19 +233,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "server/folderscan.py",
+					"file": "server/cas1server.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3161,
+						"buffer_size": 11365,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1230,
-								1230
+								1407,
+								1407
 							]
 						],
 						"settings":
@@ -225,11 +254,41 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": -0.0,
-						"translation.y": 90.0,
+						"translation.x": 0.0,
+						"translation.y": 450.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "www/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6206,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5664,
+								5664
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1125.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]

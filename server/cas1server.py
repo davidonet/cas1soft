@@ -47,7 +47,8 @@ gc.disable()
 class VideoClass(WebSocket):
 
     def appInit(self):
-        self.instance = vlc.Instance("--no-audio", "--no-xlib","--quiet","--overlay")
+        self.instance = vlc.Instance(
+            "--no-audio", "--no-xlib", "--quiet", "--overlay")
 
         self.window = gtk.Window()
         mainbox = gtk.VBox()
@@ -86,20 +87,20 @@ class VideoClass(WebSocket):
 
             self.currentSeq = msg
 
+            self.vlc_events.event_detach(
+                vlc.EventType.MediaPlayerPositionChanged)
+            self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
+
             self.vleft.player.stop()
             self.vright.player.stop()
 
-            self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
-            self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
-            
             gc.collect()
-            
+
             self.media_left = self.instance.media_new(left_vid)
             self.vleft.player.set_media(self.media_left)
 
             self.media_right = self.instance.media_new(right_vid)
             self.vright.player.set_media(self.media_right)
-
 
             if(self.vleft.player.get_length() < self.vright.player.get_length()):
                 self.vlc_events = self.vright.player.event_manager()
@@ -130,18 +131,17 @@ class VideoClass(WebSocket):
             print("Bad play")
 
     def shutterOnPlay(self, evt):
+        self.shutter({
+            u'command': u'shutter', u'side': u'left', u'state': u'off'})
+        self.shutter({
+            u'command': u'shutter', u'side': u'right', u'state': u'off'})
+
+    def openOnPlay(self, evt):
         self.vleft.player.video_set_adjust_int(
             vlc.VideoAdjustOption.Enable, False)
         self.vright.player.video_set_adjust_int(
             vlc.VideoAdjustOption.Enable, False)
-        
 
-    def openOnPlay(self, evt):
-        self.shutter({
-            u'command': u'shutter', u'side': u'left', u'state': u'on'})
-        self.shutter({
-            u'command': u'shutter', u'side': u'right', u'state': u'on'})
-        
     def shutter(self, msg):
         if(msg["side"] == "left"):
             self.vleft.player.video_set_adjust_int(
@@ -228,8 +228,6 @@ class VideoClass(WebSocket):
     def endReached(self, foo):
         msg = self.currentSeq
         msg["endreached"] = True
-        self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
-        self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
         self.sendMessage(json.dumps(msg))
 
     def handleConnected(self):
@@ -297,7 +295,7 @@ class VLCWidget(gtk.DrawingArea):
             self.player.set_xwindow(self.window.xid)
             return True
         self.connect("map", handle_embed)
-        self.set_size_request(960,540)
+        self.set_size_request(480, 270)
 
 
 class VLCContainer(gtk.VBox):
