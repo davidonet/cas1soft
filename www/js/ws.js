@@ -146,7 +146,7 @@ function endReached(msg) {
             $("#fadeout").attr("checked", false);
             setTimeout(function() {
                 playVideo(msg.actidx, msg.trackidx, msg.sequenceidx + 1);
-            }, 500);
+            }, 250);
         }
     }
 }
