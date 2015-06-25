@@ -34,6 +34,9 @@ import pprint
 import gc
 import random
 import time
+import syslog
+
+syslog.openlog('cas1local')
 
 from Queue import Queue 
 
@@ -94,6 +97,7 @@ class VideoClass():
             else:
                 self.act=0
                 self.track=0
+        syslog.syslog( "Prepare "+ str(self.act) +" "+str(self.track)+" " + str(self.seq))
         self.play(self.act, self.track, self.seq)
         self.seq += 1
         
@@ -135,7 +139,7 @@ class VideoClass():
                 vlc.EventType.MediaPlayerVout, self.openOnPlay)
 
 
-            print("Playing ",act,track,seq,left_vid)    
+            syslog.syslog( "Play "+ str(act) +" "+str(track)+" " + str(seq))
             self.vleft.player.play()
             self.vright.player.play()
 
@@ -150,7 +154,8 @@ class VideoClass():
 
     def positionChanged(self, pos):
         percent = math.floor(self.vleft.player.get_position() * 10000) / 100
-        print(percent)
+        syslog.syslog( "Playing "+ str(percent) )
+            
 
     def endReached(self, foo):
         q.put("done")
@@ -212,6 +217,6 @@ local.appInit()
 local.nextPlay()
 while True:
     q.get()
-    print("done")
+    syslog.syslog( "nextPlay")
     local.nextPlay()
     
