@@ -20,7 +20,9 @@
 # based on gtk example/widget for VLC Python bindings
 # Copyright (C) 2009-2010 the VideoLAN team
 #
-
+import ctypes
+x11 = ctypes.cdll.LoadLibrary('libX11.so')
+x11.XInitThreads()
 
 import json
 import gtk
@@ -48,7 +50,7 @@ class VideoClass(WebSocket):
 
     def appInit(self):
         self.instance = vlc.Instance(
-            "--no-audio", "--no-xlib", "--quiet", "--overlay")
+            "no-audio", "overlay", "avcodec-dr=1", "avcodec-hw=vaapi","V=glx")
 
         self.window = gtk.Window()
         mainbox = gtk.VBox()
@@ -295,7 +297,7 @@ class VLCWidget(gtk.DrawingArea):
             self.player.set_xwindow(self.window.xid)
             return True
         self.connect("map", handle_embed)
-        self.set_size_request(480, 270)
+        self.set_size_request(1280, 720)
 
 
 class VLCContainer(gtk.VBox):
