@@ -90,7 +90,7 @@ class VideoClass():
             self.seq = 0
             self.act +=1
             if self.act < len(videoCollection["collection"]) :
-                self.track = videoCollection["collection"][self.act]["tracks"][random.randint(0,len(videoCollection["collection"][self.act]["tracks"]))]
+                self.track = videoCollection["collection"][self.act]["tracks"][random.randint(0,len(videoCollection["collection"][self.act]["tracks"])-1)]
             else:
                 self.act=0
                 self.track=0
