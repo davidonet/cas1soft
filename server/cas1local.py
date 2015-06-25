@@ -33,8 +33,12 @@ import time
 import pprint
 import gc
 import random
+import time
+
+from Queue import Queue 
 
 from threading import Thread, Timer
+
 
 from folderscan import VideoCollection
 
@@ -45,14 +49,15 @@ pp = pprint.PrettyPrinter(indent=4)
 gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_UNCOLLECTABLE)
 gc.disable()
 
+q = Queue()
 
-class VideoClass:
+
+class VideoClass():
 
     def appInit(self):
-        self.act = 0
-        self.track = 0
+        self.act = 3
+        self.track = 2
         self.seq = 0
-
 
         self.instance = vlc.Instance("--no-audio", "--no-xlib", "--quiet", "--overlay")
         self.window = gtk.Window()
@@ -68,8 +73,7 @@ class VideoClass:
         self.gtkthread = Thread(target=gtk.main).start()
         self.vlc_events = self.vright.player.event_manager()
         if 'videoCollection' not in globals():
-            Thread(target=VideoCollection, args=(
-                "/home/dolivari/Public/sequences/", self.scanDone)).start()
+            VideoCollection("/home/dolivari/Public/sequences/", self.scanDone)
         else:
             pp.pprint(videoCollection)
 
@@ -79,7 +83,7 @@ class VideoClass:
             "collection": collection
         }
         pp.pprint(videoCollection)
-        self.nextPlay();
+        
 
     def nextPlay(self):
         if len(videoCollection["collection"][self.act]["tracks"][self.track]["videos_left"]) <= self.seq:
@@ -94,19 +98,18 @@ class VideoClass:
         self.seq += 1
         
     def play(self, act,track,seq):
-
+      
         if 0 <= act and 0 <= track and 0 <= seq:
 
             left_vid = videoCollection["collection"][act]["tracks"][track]["videos_left"][seq]["filename"]
             right_vid = videoCollection["collection"][act]["tracks"][track]["videos_right"][seq]["filename"]
-
-            self.vlc_events.event_detach(
-                vlc.EventType.MediaPlayerPositionChanged)
-            self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
-
+            
             self.vleft.player.stop()
             self.vright.player.stop()
-
+        
+            self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
+            self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
+        
             gc.collect()
 
             self.media_left = self.instance.media_new(left_vid)
@@ -119,6 +122,9 @@ class VideoClass:
                 self.vlc_events = self.vright.player.event_manager()
             else:
                 self.vlc_events = self.vleft.player.event_manager()
+            
+            self.vlc_events.event_attach(
+                vlc.EventType.MediaPlayerPositionChanged, self.positionChanged)
 
             self.vlc_events.event_attach(
                 vlc.EventType.MediaPlayerEndReached, self.endReached)
@@ -128,6 +134,8 @@ class VideoClass:
             self.vleft.player.event_manager().event_attach(
                 vlc.EventType.MediaPlayerVout, self.openOnPlay)
 
+
+            print("Playing ",act,track,seq,left_vid)    
             self.vleft.player.play()
             self.vright.player.play()
 
@@ -140,9 +148,12 @@ class VideoClass:
         self.vright.player.video_set_adjust_int(
             vlc.VideoAdjustOption.Enable, False)
 
+    def positionChanged(self, pos):
+        percent = math.floor(self.vleft.player.get_position() * 10000) / 100
+        print(percent)
+
     def endReached(self, foo):
-        print("end reached")
-        self.nextPlay();
+        q.put("done")
 
     def handleConnected(self):
         print(self.address, "connected")
@@ -196,6 +207,11 @@ class VLCContainer(gtk.VBox):
         self.pack_start(self._vlc_widget, expand=True)
 
 
-if __name__ == '__main__':
-   local = VideoClass()
-   local.appInit()
+local = VideoClass()
+local.appInit()
+local.nextPlay()
+while True:
+    q.get()
+    print("done")
+    local.nextPlay()
+    
