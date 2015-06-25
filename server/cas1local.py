@@ -54,7 +54,7 @@ class VideoClass:
         self.seq = 0
 
 
-        self.instance = vlc.Instance("no-audio","V=glx","overlay" "avcodec-hw=vaapi","avcodec-dr=1")
+        self.instance = vlc.Instance("--no-audio", "--no-xlib", "--quiet", "--overlay")
         self.window = gtk.Window()
         mainbox = gtk.VBox()
         videos = gtk.HBox()

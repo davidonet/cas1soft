@@ -32,93 +32,20 @@ When called as an application, it behaves as a video player.
 
 $Id$
 """
+import ctypes
+x11 = ctypes.cdll.LoadLibrary('libX11.so')
+x11.XInitThreads()
 
 import gtk
-import gobject
 gtk.gdk.threads_init()
-
-from threading import Thread
 
 import sys
 import vlc
-import json
-import math
-
-from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
-
-
-class SimpleEcho(WebSocket):
-
-    def handleMessage(self):
-        if self.data is None:
-            self.data = ''
-        print(self.data)
-        # echo message back to client
-        self.sendMessage(str(self.data))
-
-    def handleConnected(self):
-        window = gtk.Window()
-        mainbox = gtk.VBox()
-        videos = gtk.HBox()
-
-        window.add(mainbox)
-        mainbox.add(videos)
-
-        # Create VLC widgets
-        self.v1 = DecoratedVLCWidget()
-        self.v1.player.set_media(
-            instance.media_new('/opt/storage/CAS1_SRC/ACTE 4/A4-P1/CAS1_A4P1V20G_.mp4'))
-        videos.add(self.v1)
-        self.v2 = DecoratedVLCWidget()
-        self.v2.player.set_media(
-            instance.media_new('/opt/storage/CAS1_SRC/ACTE 4/A4-P1/CAS1_A4P1V20D_.mp4'))
-        videos.add(self.v2)
-
-        if(self.v1.player.get_length()<self.v2.player.get_length()):
-            self.vlc_events = self.v2.player.event_manager()
-        else:
-            self.vlc_events = self.v1.player.event_manager()
-
-        self.vlc_events.event_attach(
-            vlc.EventType.MediaPlayerPositionChanged, self.send_pos)
-        window.show_all()
-        window.connect("destroy", gtk.main_quit)
-
-        self.v1.player.play()
-        self.v2.player.play()
-
-        Thread(target=gtk.main).start()
-        print self.address, 'connected'
-
-    def handleClose(self):
-        print self.address, 'closed'
-        gtk.main_quit()
-
-    def send_pos(self, data):
-        msg = {
-            "left_screen": {
-                "time": self.v1.player.get_time()//1000,
-                "length": self.v1.player.get_length()//1000,
-                "pos": math.floor(self.v1.player.get_position()*10000)/100,
-                "mrl": self.v1.player.get_media().get_mrl()
-            },
-            "right_screen": {
-                "time": self.v2.player.get_time()//1000,
-                "length": self.v2.player.get_length()//1000,
-                "pos": math.floor(self.v2.player.get_position()*10000)/100,
-                "mrl": self.v2.player.get_media().get_mrl()
-            }
-        }
-        self.sendMessage(json.dumps(msg))
-
-
-server = SimpleWebSocketServer('', 8888, SimpleEcho)
-
 
 from gettext import gettext as _
 
 # Create a single vlc.Instance() to be shared by (possible) multiple players.
-instance = vlc.Instance("--no-xlib")
+instance = vlc.Instance()
 
 
 class VLCWidget(gtk.DrawingArea):
@@ -140,7 +67,7 @@ class VLCWidget(gtk.DrawingArea):
                 self.player.set_xwindow(self.window.xid)
             return True
         self.connect("map", handle_embed)
-        self.set_size_request(320, 180)
+        self.set_size_request(320, 200)
 
 
 class DecoratedVLCWidget(gtk.VBox):
@@ -158,8 +85,45 @@ class DecoratedVLCWidget(gtk.VBox):
         self._vlc_widget = VLCWidget(*p)
         self.player = self._vlc_widget.player
         self.pack_start(self._vlc_widget, expand=True)
-        #self._toolbar = self.get_player_control_toolbar()
-        #self.pack_start(self._toolbar, expand=False)
+        self._toolbar = self.get_player_control_toolbar()
+        self.pack_start(self._toolbar, expand=False)
+
+    def get_player_control_toolbar(self):
+        """Return a player control toolbar
+        """
+        tb = gtk.Toolbar()
+        tb.set_style(gtk.TOOLBAR_ICONS)
+        for text, tooltip, stock, callback in (
+            (_("Play"), _("Play"), gtk.STOCK_MEDIA_PLAY,
+             lambda b: self.player.play()),
+            (_("Pause"), _("Pause"), gtk.STOCK_MEDIA_PAUSE,
+             lambda b: self.player.pause()),
+            (_("Stop"), _("Stop"), gtk.STOCK_MEDIA_STOP,
+             lambda b: self.player.stop()),
+        ):
+            b = gtk.ToolButton(stock)
+            b.set_tooltip_text(tooltip)
+            b.connect("clicked", callback)
+            tb.insert(b, -1)
+        tb.show_all()
+        return tb
+
+
+class VideoPlayer:
+
+    """Example simple video player.
+    """
+
+    def __init__(self):
+        self.vlc = DecoratedVLCWidget()
+
+    def main(self, fname):
+        self.vlc.player.set_media(instance.media_new(fname))
+        w = gtk.Window()
+        w.add(self.vlc)
+        w.show_all()
+        w.connect("destroy", gtk.main_quit)
+        gtk.main()
 
 
 class MultiVideoPlayer:
@@ -171,8 +135,59 @@ class MultiVideoPlayer:
 
     def main(self, filenames):
         # Build main window
-        server.serveforever()
+        window = gtk.Window()
+        mainbox = gtk.VBox()
+        videos = gtk.HBox()
+
+        window.add(mainbox)
+        mainbox.add(videos)
+
+        # Create VLC widgets
+        for fname in filenames:
+            v = DecoratedVLCWidget()
+            v.player.set_media(
+                instance.media_new(fname, "overlay", "avcodec-dr=1", "avcodec-hw=vaapi"))
+            videos.add(v)
+
+        # Create global toolbar
+        tb = gtk.Toolbar()
+        tb.set_style(gtk.TOOLBAR_ICONS)
+
+        def execute(b, methodname):
+            """Execute the given method on all VLC widgets.
+            """
+            for v in videos.get_children():
+                getattr(v.player, methodname)()
+            return True
+
+        for text, tooltip, stock, callback, arg in (
+            (_("Play"), _("Global play"),
+             gtk.STOCK_MEDIA_PLAY, execute, "play"),
+            (_("Pause"), _("Global pause"),
+             gtk.STOCK_MEDIA_PAUSE, execute, "pause"),
+            (_("Stop"), _("Global stop"),
+             gtk.STOCK_MEDIA_STOP, execute, "stop"),
+        ):
+            b = gtk.ToolButton(stock)
+            b.set_tooltip_text(tooltip)
+            b.connect("clicked", callback, arg)
+            tb.insert(b, -1)
+
+        mainbox.pack_start(tb, expand=False)
+
+        window.show_all()
+        window.connect("destroy", gtk.main_quit)
+        gtk.main()
 
 if __name__ == '__main__':
-    p = MultiVideoPlayer()
-    p.main(sys.argv[1:])
+    if not sys.argv[1:]:
+        print "You must provide at least 1 movie filename"
+        sys.exit(1)
+    if len(sys.argv[1:]) == 1:
+        # Only 1 file. Simple interface
+        p = VideoPlayer()
+        p.main(sys.argv[1])
+    else:
+        # Multiple files.
+        p = MultiVideoPlayer()
+        p.main(sys.argv[1:])

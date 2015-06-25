@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"End",
+				"endReached"
+			],
+			[
+				"play",
+				"playVideo"
+			],
+			[
 				"left",
 				"left_vid"
 			],
@@ -91,22 +99,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "server/cas1server.py",
-			"settings":
-			{
-				"buffer_size": 11365,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "www/index.html",
-			"settings":
-			{
-				"buffer_size": 6206,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -147,7 +139,8 @@
 	},
 	"expanded_folders":
 	[
-		"/home/dolivari/dev/cas1soft",
+		"/home/dolivari/dev/cas1soft/research",
+		"/home/dolivari/dev/cas1soft/research/pyplayer",
 		"/home/dolivari/dev/cas1soft/server",
 		"/home/dolivari/dev/cas1soft/system",
 		"/home/dolivari/dev/cas1soft/www",
@@ -156,16 +149,19 @@
 	"file_history":
 	[
 		"/home/dolivari/dev/cas1soft/www/js/main.js",
-		"/home/dolivari/dev/cas1soft/www/js/beatDetect.js",
-		"/home/dolivari/dev/cas1soft/server/folderscan.py",
-		"/home/dolivari/dev/cas1soft/server/vlc.py",
-		"/home/dolivari/dev/cas1soft/system/xrandr.cfg",
-		"/home/dolivari/dev/cas1soft/server/cas1server.py",
 		"/home/dolivari/dev/cas1soft/www/js/ws.js",
+		"/home/dolivari/dev/cas1soft/www/js/shutter.js",
 		"/home/dolivari/dev/cas1soft/www/index.html",
+		"/home/dolivari/dev/cas1soft/server/cas1server.py",
+		"/home/dolivari/dev/cas1soft/research/pyplayer/gtkplayer.py",
+		"/run/user/1000/gvfs/sftp:host=sftp.dc0.gpaas.net,user=1516282/vhosts/www.deslies.org/htdocs/index.html",
+		"/home/dolivari/dev/cas1soft/system/xrandr.cfg",
+		"/run/user/1000/gvfs/ftp:host=ftp.david-o.net,user=davido/www/index.html",
+		"/home/dolivari/dev/cas1soft/server/folderscan.py",
+		"/home/dolivari/dev/cas1soft/www/js/beatDetect.js",
+		"/home/dolivari/dev/cas1soft/server/vlc.py",
 		"/mnt/spare/Dropbox/Projects.bak/Panem_et_Circenses/system.svg",
 		"/mnt/spare/Dropbox/Projects.bak/LesFabricateurs/Crieur/drawing.svg",
-		"/run/user/1000/gvfs/sftp:host=sftp.dc0.gpaas.net,user=1516282/vhosts/www.deslies.org/htdocs/index.html",
 		"/home/dolivari/dev/cas1soft/server/testCrash.py",
 		"/home/dolivari/dev/cas1soft/research/pyplayer/SimpleWebSocketServer.py",
 		"/home/dolivari/dev/cas1soft/www/css/main.css",
@@ -228,69 +224,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "server/cas1server.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11365,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1407,
-								1407
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 450.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "www/index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6206,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5664,
-								5664
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1125.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
 			]
 		}
 	],
