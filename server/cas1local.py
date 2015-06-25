@@ -93,7 +93,7 @@ class VideoClass():
             self.seq = 0
             self.act +=1
             if self.act < len(videoCollection["collection"]) :
-                self.track = videoCollection["collection"][self.act]["tracks"][random.randint(0,len(videoCollection["collection"][self.act]["tracks"])-1)]
+                self.track = random.randint(0,len(videoCollection["collection"][self.act]["tracks"])-1)
             else:
                 self.act=0
                 self.track=0
@@ -102,7 +102,7 @@ class VideoClass():
         self.seq += 1
         
     def play(self, act,track,seq):
-      
+
         if 0 <= act and 0 <= track and 0 <= seq:
 
             left_vid = videoCollection["collection"][act]["tracks"][track]["videos_left"][seq]["filename"]
@@ -110,6 +110,7 @@ class VideoClass():
             
             self.vleft.player.stop()
             self.vright.player.stop()
+	    self.pcount = 0
         
             self.vlc_events.event_detach(vlc.EventType.MediaPlayerPositionChanged)
             self.vlc_events.event_detach(vlc.EventType.MediaPlayerEndReached)
@@ -153,11 +154,13 @@ class VideoClass():
             vlc.VideoAdjustOption.Enable, False)
 
     def positionChanged(self, pos):
-        percent = math.floor(self.vleft.player.get_position() * 10000) / 100
-        syslog.syslog( "Playing "+ str(percent) )
-            
+        percent = math.floor(self.vleft.player.get_position() * 10000)/100.0
+	if 0 == self.pcount % 30 :
+	    syslog.syslog( "Playing "+ str(percent) +"%")
+	self.pcount+=1
 
     def endReached(self, foo):
+        syslog.syslog( "Finish "+ str(self.act) +" "+str(self.track)+" " + str(self.seq))
         q.put("done")
 
     def handleConnected(self):
