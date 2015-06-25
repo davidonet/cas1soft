@@ -55,8 +55,8 @@ q = Queue()
 class VideoClass():
 
     def appInit(self):
-        self.act = 3
-        self.track = 2
+        self.act = 0
+        self.track = 0 
         self.seq = 0
 
         self.instance = vlc.Instance("--no-audio", "--no-xlib", "--quiet", "--overlay")
