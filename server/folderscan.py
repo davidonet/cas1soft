@@ -35,6 +35,7 @@ class VideoCollection:
         self.collection = [None, None, None, None, None, None, None, None]
         for f in sorted(os.listdir(path)):
             filename = path + f
+            print(filename)
             media_info = MediaInfo.parse(filename)
             m = re.match(r"A(\d)_P(\d)_V(\d{2})_(.)_(.*)\.mp4", f)
             act = int(m.group(1))
